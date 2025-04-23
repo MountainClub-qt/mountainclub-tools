@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  cloudflared:
+    image: cloudflare/cloudflared
+    container_name: cloudflared
+    environment:
+      - TZ=Pacific/Auckland  # Adjust to your timezone
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    networks:
+      - cloudflared
+
+networks:
+  cloudflared:
+    name: cloudflared

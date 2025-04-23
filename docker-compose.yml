@@ -1,0 +1,67 @@
+version: '3'
+
+networks:
+  traefik-net:
+    name: traefik-net
+  cloudflared:
+    name: cloudflared
+    external: true
+
+services:
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS
+      - "8080:8080"  # Dashboard (you may want to restrict this in production)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/config/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik/config/dynamic:/etc/traefik/dynamic:ro
+      - ./traefik/data:/data
+    networks:
+      - traefik-net
+      - cloudflared
+    labels:
+      - "traefik.enable=true"
+      # Dashboard
+      - "traefik.http.routers.traefik-dashboard.rule=Host(`traefik.mountainclub.co.nz`)"
+      - "traefik.http.routers.traefik-dashboard.service=api@internal"
+      - "traefik.http.routers.traefik-dashboard.entrypoints=web,websecure"
+      # Global middleware - you can add security headers, etc.
+      - "traefik.http.middlewares.secure-headers.headers.sslRedirect=true"
+      - "traefik.http.middlewares.secure-headers.headers.stsSeconds=31536000"
+      - "traefik.http.middlewares.secure-headers.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.secure-headers.headers.browserXssFilter=true"
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    environment:
+      - N8N_PORT=5678
+      - WEBHOOK_URL=https://n8n.mountainclub.co.nz
+      - N8N_PROTOCOL_HEADER=https
+      - N8N_HOST_HEADER=n8n.mountainclub.co.nz
+      - NODE_ENV=production
+      - N8N_TUNNEL=true
+      - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - N8N_TRUSTED_PROXIES=traefik
+      - N8N_TRUST_PROXY_HEADER=true
+      - N8N_METRICS=false
+      - N8N_RUNNERS_ENABLED=true
+    volumes:
+      - ./services/n8n/data:/home/node/.n8n
+    networks:
+      - traefik-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n.rule=Host(`n8n.mountainclub.co.nz`)"
+      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+      - "traefik.http.routers.n8n.entrypoints=web,websecure"
+      - "traefik.http.routers.n8n.middlewares=secure-headers@docker"
