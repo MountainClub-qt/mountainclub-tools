@@ -1,4 +1,7 @@
 http:
+  serversTransports:
+    insecureTransport:
+      insecureSkipVerify: true
   routers:
     n8n:
       rule: "Host(`n8n.mountainclub.co.nz`)"
@@ -10,5 +13,6 @@ http:
   services:
     n8n:
       loadBalancer:
+        serversTransport: insecureTransport
         servers:
           - url: "https://n8n-8i971c.sliplane.app"
