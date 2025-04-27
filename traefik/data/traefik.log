@@ -73,3 +73,11 @@ time="2025-04-23T04:28:09Z" level=error msg="close tcp [::]:443: use of closed n
 time="2025-04-23T04:28:09Z" level=error msg="close tcp [::]:8080: use of closed network connection" entryPointName=traefik
 time="2025-04-23T04:28:10Z" level=info msg="Server stopped"
 time="2025-04-23T04:28:10Z" level=info msg="Shutting down"
+time="2025-04-27T05:08:57Z" level=info msg="Traefik version 2.10.7 built on 2023-12-06T15:54:59Z"
+time="2025-04-27T05:08:57Z" level=info msg="\nStats collection is disabled.\nHelp us improve Traefik by turning this feature on :)\nMore details on: https://doc.traefik.io/traefik/contributing/data-collection/\n"
+time="2025-04-27T05:08:57Z" level=info msg="Starting provider aggregator aggregator.ProviderAggregator"
+time="2025-04-27T05:08:57Z" level=info msg="Starting provider *file.Provider"
+time="2025-04-27T05:08:57Z" level=info msg="Starting provider *traefik.Provider"
+time="2025-04-27T05:08:57Z" level=info msg="Starting provider *docker.Provider"
+time="2025-04-27T05:08:57Z" level=info msg="Starting provider *acme.ChallengeTLSALPN"
+time="2025-04-27T05:08:57Z" level=warning msg="SSLRedirect is deprecated, please use entrypoint redirection instead." middlewareType=Headers entryPointName=web routerName=n8n@docker middlewareName=secure-headers@docker
