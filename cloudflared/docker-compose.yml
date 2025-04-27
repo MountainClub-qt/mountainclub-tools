@@ -11,7 +11,10 @@ services:
     command: tunnel --no-autoupdate run
     networks:
       - cloudflared
+      - traefik-net
 
 networks:
   cloudflared:
-    name: cloudflared
+    external: true
+  traefik-net:
+    external: true

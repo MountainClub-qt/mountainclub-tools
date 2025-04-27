@@ -3,6 +3,7 @@ version: '3'
 networks:
   traefik-net:
     name: traefik-net
+    external: true
   cloudflared:
     name: cloudflared
     external: true
@@ -48,10 +49,11 @@ services:
       - N8N_PROTOCOL_HEADER=https
       - N8N_HOST_HEADER=n8n.mountainclub.co.nz
       - NODE_ENV=production
+      - N8N_SKIP_WEBHOOK_DEREGISTRATION_SHUTDOWN=true
       - N8N_TUNNEL=true
       - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
-      - N8N_TRUSTED_PROXIES=traefik
+      - N8N_TRUSTED_PROXIES=traefik, cloudflared
       - N8N_TRUST_PROXY_HEADER=true
       - N8N_METRICS=false
       - N8N_RUNNERS_ENABLED=true
@@ -64,4 +66,6 @@ services:
       - "traefik.http.routers.n8n.rule=Host(`n8n.mountainclub.co.nz`)"
       - "traefik.http.services.n8n.loadbalancer.server.port=5678"
       - "traefik.http.routers.n8n.entrypoints=web,websecure"
+      - "traefik.http.middlewares.n8n-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.n8n-headers.headers.customrequestheaders.X-Forwarded-Host=n8n.mountainclub.co.nz"
       - "traefik.http.routers.n8n.middlewares=secure-headers@docker"
