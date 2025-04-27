@@ -81,3 +81,4 @@ time="2025-04-27T05:08:57Z" level=info msg="Starting provider *traefik.Provider"
 time="2025-04-27T05:08:57Z" level=info msg="Starting provider *docker.Provider"
 time="2025-04-27T05:08:57Z" level=info msg="Starting provider *acme.ChallengeTLSALPN"
 time="2025-04-27T05:08:57Z" level=warning msg="SSLRedirect is deprecated, please use entrypoint redirection instead." middlewareType=Headers entryPointName=web routerName=n8n@docker middlewareName=secure-headers@docker
+time="2025-04-27T05:18:59Z" level=warning msg="A new release has been found: 3.3.6. Please consider updating."

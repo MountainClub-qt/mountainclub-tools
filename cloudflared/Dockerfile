@@ -1,2 +1,5 @@
 FROM cloudflare/cloudflared
-CMD ["tunnel", "--no-autoupdate", "run"]
+
+# No need to expose ports as cloudflared makes outbound connections
+
+# The command will be specified in the override section
