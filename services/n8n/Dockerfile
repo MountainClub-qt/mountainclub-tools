@@ -1,10 +1,6 @@
-FROM alpine:latest
+FROM n8nio/n8n:latest
 
-RUN apk add --no-cache curl bind-tools iputils
+# Expose the n8n port
+EXPOSE 5678
 
-CMD /bin/ash -c "echo '--- NETWORK TEST ---' && \
-    ping -c 2 8.8.8.8 && \
-    ping -c 2 google.com && \
-    nslookup google.com && \
-    curl -v https://jsonplaceholder.typicode.com/posts && \
-    echo '--- DONE ---'"
+# The CMD is inherited from the base image
